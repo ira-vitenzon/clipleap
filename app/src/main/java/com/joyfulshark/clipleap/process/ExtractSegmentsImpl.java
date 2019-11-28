@@ -8,11 +8,11 @@ import com.joyfulshark.clipleap.common.Video;
 import java.util.List;
 import java.util.SortedMap;
 
-public class ExtractSegments {
+public class ExtractSegmentsImpl implements  ExtractSegmentsIfc{
 
     int halfClipLength = 60 * 4; // frames per second * half clip length in seconds
 
-    public Video extractVideoSegment(Video video, SceneType type){
+    public Video extractVideoSegments(Video video, SceneType type){
 
         SortedMap<Float, List<Integer>> scores = video.getSortedScores(type);
         Float maxKey = scores.lastKey();
