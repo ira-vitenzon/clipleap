@@ -1,0 +1,45 @@
+package com.joyfulshark.clipleap.process;
+
+import android.graphics.Bitmap;
+
+import com.joyfulshark.clipleap.common.Video;
+
+import java.util.List;
+import java.util.SortedMap;
+
+public class ExtractSegments {
+
+    int halfClipLength = 60 * 4; // frames per second * half clip length in seconds
+
+    public Video extractVideoSegment(Video video){
+
+        SortedMap<Float, List<Integer>> scores = video.getSortedScores();
+        Float maxKey = scores.firstKey();
+        List<Integer> frameIdxs = scores.get(maxKey);
+        Integer maxIdx = frameIdxs.get(0);
+
+        int startIdx = -1;
+        for (int i = maxIdx; i > maxIdx - halfClipLength - 1; i--) {
+            Bitmap frame = video.getFrame(i);
+            if (frame == null){
+                startIdx = i + 1;
+            }
+        }
+        if (startIdx == -1){
+            startIdx = maxIdx - halfClipLength;
+        }
+
+        int endIdx = -1;
+        for (int i = maxIdx; i < maxIdx + halfClipLength + 1; i++) {
+            Bitmap frame = video.getFrame(i);
+            if (frame == null){
+                endIdx = i - 1;
+            }
+        }
+        if (endIdx == -1){
+            endIdx = maxIdx + halfClipLength;
+        }
+
+        return video.getSubVideo(startIdx, endIdx);
+    }
+}
