@@ -9,6 +9,19 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.os.Environment;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.core.Core;
+import org.opencv.android.OpenCVLoader;
+
+import java.util.ArrayList;
+import java.io.File;
+
+import android.media.MediaMetadataRetriever;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +39,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    ImageView _imvTestedImage;
+    Bitmap _imgBitmap;
+    Button _btnSelectImage;
+    Button _btnRunTest;
+    String _testedImageFilePath;
+
+    VideoReader _videoReader;
     ImageView _imvLabeledPicture;
     Button _btnSelectPicture;
 
@@ -35,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // load opencv lib
+        if (!OpenCVLoader.initDebug()) {
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, null);
+        }
+
         setContentView(R.layout.activity_main);
+
         try {
             InputStreamReader is = new InputStreamReader(getAssets().open("objects.csv"));
             ObjectsScores.getInstance().build(is);
@@ -76,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 
 
 }
