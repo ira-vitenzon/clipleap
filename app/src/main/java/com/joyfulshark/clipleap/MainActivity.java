@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -23,6 +22,21 @@ import java.io.File;
 
 import android.media.MediaMetadataRetriever;
 
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.joyfulshark.clipleap.common.ObjectsScores;
+import com.joyfulshark.clipleap.common.SceneType;
+import com.joyfulshark.clipleap.common.Video;
+import com.joyfulshark.clipleap.process.MainProcess;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageView _imvTestedImage;
@@ -32,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     String _testedImageFilePath;
 
     VideoReader _videoReader;
+    ImageView _imvLabeledPicture;
+    Button _btnSelectPicture;
+
+    final int REQUEST_PICK_FILE = 0;
+    TextView _txvResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,54 +62,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
-        _imvTestedImage = findViewById(R.id.imv_tested_image);
-        _btnSelectImage = findViewById(R.id.btn_select_image);
-        _btnSelectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                startActivityForResult(intent, 0);
-            }
-        });
-        _btnRunTest = findViewById(R.id.btn_run_test);
-        _btnRunTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                boolean isDefective = DefectiveImageDetector.isDefective(_testedImageFilePath);
-                boolean isDefective = DefectiveImageDetector.isDefective(_imgBitmap);
-                if(isDefective) {
-                    Toast.makeText(MainActivity.this, "Image is defective!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "Image is OK", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
-        File videoFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "street_2.mp4");
-//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.test_vid);
-//        ArrayList<Bitmap> frames = VideoReader.readFrames(uri.toString());
-//        _imvTestedImage.setImageBitmap(frames.get(0));
-        ArrayList<Bitmap> frames = VideoReader.readFrames(videoFile.getPath());
-        _imvTestedImage.setImageBitmap(frames.get(0));
+        try {
+            InputStreamReader is = new InputStreamReader(getAssets().open("objects.csv"));
+            ObjectsScores.getInstance().build(is);
+            _btnSelectPicture = findViewById(R.id.btn_select_pic);
+            _imvLabeledPicture = findViewById(R.id.imv_labeled_pic);
+            _btnSelectPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, REQUEST_PICK_FILE);
+                }
+            });
+            _txvResults = findViewById(R.id.txv_results);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_PICK_FILE && resultCode == RESULT_OK && data != null) {
             try {
-                Uri testedImageUri = data.getData();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), testedImageUri);
-                _imvTestedImage.setImageBitmap(bitmap);
-                _imgBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-//                _testedImageFilePath = testedImageUri.getPath();
-//                _testedImageFilePath = "tmp";
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+
+                List<Bitmap> bitmapList = new ArrayList<>();
+                bitmapList.add(bitmap);
+                Video video = new Video(bitmapList);
+                List<Video> videoList = new ArrayList<>();
+                videoList.add(video);
+                MainProcess process = MainProcess.getInstance();
+                process.startProcess(videoList, SceneType.NATURE);
+
             } catch (Exception e) {
                 Toast.makeText(this, "Failed to open file!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 
 }

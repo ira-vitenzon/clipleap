@@ -10,11 +10,27 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imv_tested_image"
+        android:id="@+id/imv_labeled_pic"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="8"
         android:background="#000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="4">
+
+        <TextView
+            android:id="@+id/txv_results"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -23,18 +39,7 @@
         android:layout_weight="1">
 
         <Button
-            android:id="@+id/btn_select_image"
-            android:text="Select..."
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-
-        <Button
-            android:id="@+id/btn_run_test"
-            android:text="Test"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+                android:layout_height="match_parent"/>
 
     </LinearLayout>
 
