@@ -1,6 +1,6 @@
 package com.joyfulshark.clipleap.common;
 
-public enum SceneEnum {
+public enum SceneType {
     CITY,
     NATURE
 }

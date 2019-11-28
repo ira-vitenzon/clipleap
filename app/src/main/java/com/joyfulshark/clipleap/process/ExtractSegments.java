@@ -2,6 +2,7 @@ package com.joyfulshark.clipleap.process;
 
 import android.graphics.Bitmap;
 
+import com.joyfulshark.clipleap.common.SceneType;
 import com.joyfulshark.clipleap.common.Video;
 
 import java.util.List;
@@ -11,10 +12,10 @@ public class ExtractSegments {
 
     int halfClipLength = 60 * 4; // frames per second * half clip length in seconds
 
-    public Video extractVideoSegment(Video video){
+    public Video extractVideoSegment(Video video, SceneType type){
 
-        SortedMap<Float, List<Integer>> scores = video.getSortedScores();
-        Float maxKey = scores.firstKey();
+        SortedMap<Float, List<Integer>> scores = video.getSortedScores(type);
+        Float maxKey = scores.lastKey();
         List<Integer> frameIdxs = scores.get(maxKey);
         Integer maxIdx = frameIdxs.get(0);
 
