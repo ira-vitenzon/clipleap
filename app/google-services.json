@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519352124206",
+    "firebase_url": "https://clipleap-deadb.firebaseio.com",
+    "project_id": "clipleap-deadb",
+    "storage_bucket": "clipleap-deadb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519352124206:android:b24e7475856920e8d030bf",
+        "android_client_info": {
+          "package_name": "com.joyfulshark.clipleap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519352124206-0k1hg8le0ehfs14kd8i0gqffb47pl0kk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.joyfulshark.clipleap",
+            "certificate_hash": "3e6fe9868acad7b328b895c6dab51095e7043c7d"
+          }
+        },
+        {
+          "client_id": "519352124206-fmeef64p5cmt546o1o18joesl1lvqk8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2_n3OkIvRA9Lg-KaGvf_zlsuV2rJ9zfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519352124206-fmeef64p5cmt546o1o18joesl1lvqk8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
