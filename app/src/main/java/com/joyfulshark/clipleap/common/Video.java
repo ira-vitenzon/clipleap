@@ -3,7 +3,9 @@ package com.joyfulshark.clipleap.common;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class Video {
@@ -13,14 +15,20 @@ public class Video {
 
     public Video(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
-        this.scores = new TreeMap<>();
+        // Creating a TreeMap with a Custom comparator (Descending order)
+        this.scores = new TreeMap<>(new Comparator<Float>() {
+            @Override
+            public int compare(Float o1, Float o2) {
+                return o2.compareTo(o1);
+            }
+        });
     }
 
     public List<Bitmap> getBitmapList() {
         return bitmapList;
     }
 
-    public TreeMap<Float, List<Integer>> getScores() {
+    public Map<Float, List<Integer>> getSortedScores() {
         return scores;
     }
 
