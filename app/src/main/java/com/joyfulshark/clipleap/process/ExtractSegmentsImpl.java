@@ -41,6 +41,6 @@ public class ExtractSegmentsImpl implements  ExtractSegmentsIfc{
             endIdx = maxIdx + halfClipLength;
         }
 
-        return video.getSubVideo(startIdx, endIdx);
+        return video.getSubVideo(startIdx, endIdx + 1);
     }
 }
