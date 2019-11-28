@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "519352124206-apvspajks0erpce6la3gbkf5ng9qtagh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.joyfulshark.clipleap",
+            "certificate_hash": "49813a24719d4156e5880787ab29436d787c9d45"
+          }
+        },
+        {
           "client_id": "519352124206-0k1hg8le0ehfs14kd8i0gqffb47pl0kk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

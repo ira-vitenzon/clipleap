@@ -1,6 +1,7 @@
 package com.joyfulshark.clipleap;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import com.joyfulshark.clipleap.common.ObjectsScores;
 
@@ -25,10 +26,9 @@ public class ExampleUnitTest {
 
     @Test
     public void csvTest() throws FileNotFoundException {
-        File file = new File("C:\\Users\\Dvir\\Desktop\\Android\\clipleap\\app\\src\\main\\assets\\objects.csv");
-        FileReader fileReader = new FileReader(file);
-        ObjectsScores.getInstance().build(fileReader);
-        System.out.println(ObjectsScores.getObjectsMap());
+
+
+
     }
 
 }
