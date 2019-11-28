@@ -11,8 +11,12 @@ import java.util.TreeMap;
 
 public class Video {
 
-    List<Bitmap> bitmapList;
-    Map<SceneType,SortedMap<Float, List<Integer>>> scores;
+    private final List<Bitmap> bitmapList;
+    /**
+     * In this SortedMap the key is the frame score
+     * and the value is list of frames with the same score
+     */
+    private final Map<SceneType, SortedMap<Float, List<Integer>>> scores;
 
     public Video(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
@@ -37,7 +41,7 @@ public class Video {
     }
 
     public void addScore(int frameId, float score, SceneType type) {
-        if (!scores.containsKey(type)){
+        if (!scores.containsKey(type)) {
             scores.put(type, new TreeMap<Float, List<Integer>>());
         }
         SortedMap<Float, List<Integer>> scoresForType = scores.get(type);
