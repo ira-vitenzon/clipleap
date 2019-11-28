@@ -28,6 +28,10 @@ public class Video {
     }
 
     public SortedMap<Float, List<Integer>> getSortedScores(SceneType type) {
+        if (!scores.containsKey(type)){
+            TreeMap<Float, List<Integer>> sortedScoresForType = new TreeMap<>();
+            scores.put(type, sortedScoresForType);
+        }
         return scores.get(type);
     }
 
@@ -40,7 +44,7 @@ public class Video {
         return new Video(bitmapList.subList(begin, end));
     }
 
-    public void addScore(int frameId, float score, SceneType type) {
+    private void addScore(int frameId, float score, SceneType type) {
         if (!scores.containsKey(type)) {
             scores.put(type, new TreeMap<Float, List<Integer>>());
         }
@@ -53,5 +57,7 @@ public class Video {
             scoresForType.put(score, list);
         }
     }
+
+
 
 }

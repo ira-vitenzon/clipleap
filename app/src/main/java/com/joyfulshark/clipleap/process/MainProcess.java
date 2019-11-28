@@ -10,9 +10,14 @@ import java.util.List;
 
 public class MainProcess {
 
+    private static final MainProcess instance = new MainProcess();
+
     FillScoresIfc fillScores = new FillScoresImpl();
     ExtractSegmentsIfc extractSegments = new ExtractSegmentsImpl();
 
+    public static MainProcess getInstance(){
+        return instance;
+    }
 
     public void startProcess(List<Video> videos, SceneType type){
 

@@ -1,12 +1,17 @@
 package com.joyfulshark.clipleap.process;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
-import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
-import com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
 import com.joyfulshark.clipleap.common.ObjectsScores;
 import com.joyfulshark.clipleap.common.SceneType;
 import com.joyfulshark.clipleap.common.Video;
@@ -22,11 +27,6 @@ public class FillScoresImpl implements FillScoresIfc {
     public void fillScores(Video video) {
 
         float threshold = 0.5f;
-        FirebaseVisionOnDeviceImageLabelerOptions options =
-                new FirebaseVisionOnDeviceImageLabelerOptions.Builder()
-                        .setConfidenceThreshold(threshold)
-                        .build();
-
 
         List<Bitmap> bitmaps = video.getBitmapList();
 
@@ -38,30 +38,44 @@ public class FillScoresImpl implements FillScoresIfc {
     }
 
     @Override
-    public void calcFrameScore(Video video, int i) {
+    public void calcFrameScore(Video video, final int i) {
 
-        Map<String, Map<SceneType, Float>> objectsScore = ObjectsScores.getObjectsMap();
-        SortedMap<Float, List<Integer>> cityScores = video.getSortedScores(SceneType.CITY);
-        SortedMap<Float, List<Integer>> natureScores = video.getSortedScores(SceneType.NATURE);
+        final Map<String, Map<SceneType, Float>> objectsScore = ObjectsScores.getObjectsMap();
+        final SortedMap<Float, List<Integer>> cityScores = video.getSortedScores(SceneType.CITY);
+        final SortedMap<Float, List<Integer>> natureScores = video.getSortedScores(SceneType.NATURE);
 
-        float cityScore = 0;
-        float natureScore = 0;
 
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(video.getBitmapList().get(i));
-        FirebaseVisionImageLabeler detector = FirebaseVision.getInstance()
-                .getOnDeviceImageLabeler();
-        final List<FirebaseVisionImageLabel> result = detector.processImage(image).getResult();
+        FirebaseVisionImage fbVisionImage = FirebaseVisionImage.fromBitmap(video.getBitmapList().get(i));
+        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance().getVisionLabelDetector();
+        detector.detectInImage(fbVisionImage)
+                .addOnSuccessListener(
+                        new OnSuccessListener<List<FirebaseVisionLabel>>() {
+                            float cityScore = 0;
+                            float natureScore = 0;
+                            @Override
+                            public void onSuccess(List<FirebaseVisionLabel> labels) {
+                                for(FirebaseVisionLabel labelObj : labels){
+                                    String label = labelObj.getLabel().toLowerCase();
+                                    Log.d("Label", label);
+                                    if (objectsScore.containsKey(label)) {
+                                        float labelConfidence = labelObj.getConfidence();
+                                        cityScore += labelConfidence * objectsScore.get(label).get(SceneType.CITY);
+                                        natureScore += labelConfidence * objectsScore.get(label).get(SceneType.NATURE);
+                                        addScoreToMap(cityScores, i, cityScore);
+                                        addScoreToMap(natureScores, i, natureScore);
+                                    }
+                                }
 
-        for (FirebaseVisionImageLabel label : result) {
-            if (objectsScore.containsKey(label)) {
-                float labelConfidence = label.getConfidence();
-                cityScore += labelConfidence * objectsScore.get(label).get(SceneType.CITY);
-                natureScore += labelConfidence * objectsScore.get(label).get(SceneType.NATURE);
-            }
-        }
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(null, "Classification failed!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-        addScoreToMap(cityScores, i, cityScore);
-        addScoreToMap(natureScores, i, natureScore);
     }
 
     private void addScoreToMap(SortedMap<Float, List<Integer>> natureScores, int i, float natureScore) {
