@@ -5,13 +5,13 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Video {
 
     List<Bitmap> bitmapList;
-    TreeMap<Float, List<Integer>> scores;
+    SortedMap<Float, List<Integer>> scores;
 
     public Video(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
@@ -28,7 +28,7 @@ public class Video {
         return bitmapList;
     }
 
-    public Map<Float, List<Integer>> getSortedScores() {
+    public SortedMap<Float, List<Integer>> getSortedScores() {
         return scores;
     }
 
@@ -37,8 +37,8 @@ public class Video {
     }
 
     //Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive.
-    public List<Bitmap> getSubVideo(int begin, int end) {
-        return bitmapList.subList(begin, end);
+    public Video getSubVideo(int begin, int end) {
+        return new Video(bitmapList.subList(begin, end));
     }
 
     public void addScore(int frameId, float score) {
