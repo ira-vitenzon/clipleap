@@ -4,8 +4,6 @@ import com.joyfulshark.clipleap.common.Video;
 
 public interface FillScoresIfc {
 
-    void fillScores(Video video);
-
-    void calcFrameScore(Video video, int i);
+    void fillScores(Video video, FillScoreListener listener);
 
 }

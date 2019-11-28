@@ -19,16 +19,27 @@ public class MainProcess {
         return instance;
     }
 
-    public void startProcess(List<Video> videos, SceneType type){
+    public void startProcess(List<Video> videos, final SceneType type){
 
-        List<Bitmap> resultBitmapList = new ArrayList<>();
-        for (Video video : videos){
-            fillScores.fillScores(video);
-            Video clippedVideo = extractSegments.extractVideoSegments(video, type);
-            resultBitmapList.addAll(clippedVideo.getBitmapList());
+        for (final Video video : videos){
+            fillScores.fillScores(video, new FillScoreListener() {
+                @Override
+                public void onFillScoreSuccess() {
+                    List<Bitmap> resultBitmapList = new ArrayList<>();
+                    Video clippedVideo = extractSegments.extractVideoSegments(video, type);
+                    resultBitmapList.addAll(clippedVideo.getBitmapList());
+                    Video resultVideo = new Video(resultBitmapList);
+                }
+
+                @Override
+                public void onFillScoreFail() {
+
+                }
+            });
+
         }
 
-        Video resultVideo = new Video(resultBitmapList);
+
     }
 
 

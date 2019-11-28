@@ -23,22 +23,21 @@ import java.util.SortedMap;
 
 public class FillScoresImpl implements FillScoresIfc {
 
-    @Override
-    public void fillScores(Video video) {
 
+    @Override
+    public void fillScores(Video video, FillScoreListener listener) {
         float threshold = 0.5f;
 
         List<Bitmap> bitmaps = video.getBitmapList();
 
         int frameJump = 50;
         for (int i = 0; i < bitmaps.size(); i = i + frameJump) {
-            calcFrameScore(video, i);
+            calcFrameScore(video, i, listener);
         }
-
     }
 
-    @Override
-    public void calcFrameScore(Video video, final int i) {
+
+    private void calcFrameScore(Video video, final int i, final FillScoreListener listener) {
 
         final Map<String, Map<SceneType, Float>> objectsScore = ObjectsScores.getObjectsMap();
         final SortedMap<Float, List<Integer>> cityScores = video.getSortedScores(SceneType.CITY);
@@ -61,10 +60,11 @@ public class FillScoresImpl implements FillScoresIfc {
                                         float labelConfidence = labelObj.getConfidence();
                                         cityScore += labelConfidence * objectsScore.get(label).get(SceneType.CITY);
                                         natureScore += labelConfidence * objectsScore.get(label).get(SceneType.NATURE);
-                                        addScoreToMap(cityScores, i, cityScore);
-                                        addScoreToMap(natureScores, i, natureScore);
                                     }
                                 }
+                                addScoreToMap(cityScores, i, cityScore);
+                                addScoreToMap(natureScores, i, natureScore);
+                                listener.onFillScoreSuccess();
 
                             }
                         })
@@ -72,6 +72,7 @@ public class FillScoresImpl implements FillScoresIfc {
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                listener.onFillScoreFail();
                                 Toast.makeText(null, "Classification failed!", Toast.LENGTH_SHORT).show();
                             }
                         });
