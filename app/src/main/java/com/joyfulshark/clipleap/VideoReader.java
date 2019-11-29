@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class VideoReader {
 
+    // must sample to avoid memory overload
+    private static final int SAMPLE_RATE = 20;
+
     public static ArrayList<Bitmap> readFrames(String videoFolder) {
         ArrayList<Bitmap> bmps = new ArrayList<Bitmap>();
 
@@ -18,7 +21,7 @@ public class VideoReader {
         File[] listOfFiles = folder.listFiles();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 8;
-        for (int i = 0; i < listOfFiles.length; i+=20) {
+        for (int i = 0; i < listOfFiles.length; i+=SAMPLE_RATE) {
             File image = listOfFiles[i];
             try {
                 Bitmap bmp = BitmapFactory.decodeFile(image.getAbsolutePath());

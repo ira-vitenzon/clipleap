@@ -13,6 +13,11 @@ import com.joyfulshark.clipleap.VideoReader;
 import com.joyfulshark.clipleap.WizardView.WizardPage;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.joyfulshark.clipleap.common.SceneType;
+import com.joyfulshark.clipleap.common.Video;
+import com.joyfulshark.clipleap.process.MainProcess;
 
 public class EditProgressWizardPage extends WizardPage {
 
@@ -29,6 +34,11 @@ public class EditProgressWizardPage extends WizardPage {
 
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/vids/street_1_short";
         ArrayList<Bitmap> bmps = VideoReader.readFrames(path);
+        Video video = new Video(bmps);
+        List<Video> videoList = new ArrayList<>();
+        videoList.add(video);
+        MainProcess process = MainProcess.getInstance();
+        process.startProcess(videoList, SceneType.NATURE);
     }
 
 }
