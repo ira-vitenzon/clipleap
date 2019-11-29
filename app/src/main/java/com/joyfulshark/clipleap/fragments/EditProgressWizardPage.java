@@ -1,12 +1,18 @@
 package com.joyfulshark.clipleap.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.joyfulshark.clipleap.R;
+import com.joyfulshark.clipleap.VideoReader;
 import com.joyfulshark.clipleap.WizardView.WizardPage;
+
+import java.util.ArrayList;
 
 public class EditProgressWizardPage extends WizardPage {
 
@@ -17,6 +23,12 @@ public class EditProgressWizardPage extends WizardPage {
     }
 
     @Override
-    public void setData(Bundle params){}
+    public void setData(Bundle params){
+        boolean isCity = params.getBoolean("isCity");
+        Toast.makeText(getContext(), "" + isCity, Toast.LENGTH_SHORT).show();
+
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/vids/street_1_short";
+        ArrayList<Bitmap> bmps = VideoReader.readFrames(path);
+    }
 
 }

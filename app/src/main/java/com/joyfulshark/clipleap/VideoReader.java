@@ -1,42 +1,32 @@
 package com.joyfulshark.clipleap;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import org.opencv.core.Mat;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.Videoio;
 
 public class VideoReader {
 
-    public static ArrayList<Bitmap> readFrames(String videoFilePath) {
-        Mat matOrig = new Mat();
-        VideoCapture capture = new VideoCapture(videoFilePath);
-        Bitmap currFrame = null;
-        ArrayList<Bitmap> frames = new ArrayList<>();
-        if (capture.isOpened()) {
-            while (true) {
-                capture.read(matOrig);
-                // get some meta data about frame
-                double fps = capture.get(Videoio.CAP_PROP_FPS);
-                double frameCount = capture.get(Videoio.CAP_PROP_FRAME_COUNT);
-                double h = capture.get(Videoio.CAP_PROP_FRAME_HEIGHT);
-                double w = capture.get(Videoio.CAP_PROP_FRAME_WIDTH);
-                double posFrames = capture.get(Videoio.CAP_PROP_POS_FRAMES);
-                double posMsec = capture.get(Videoio.CAP_PROP_POS_MSEC);
-                double speed = capture.get(Videoio.CAP_PROP_SPEED);
-                // read frame
-                if (!matOrig.empty()) {
-                    currFrame = ImageUtils.matToBitmap(matOrig);
-                    if (currFrame != null) {
-                        frames.add(currFrame);
-                    }
-                }
-                break;
+    public static ArrayList<Bitmap> readFrames(String videoFolder) {
+        ArrayList<Bitmap> bmps = new ArrayList<Bitmap>();
+
+        File folder = new File(videoFolder);
+        if (folder == null) {
+            return bmps;
+        }
+        File[] listOfFiles = folder.listFiles();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        for (int i = 0; i < listOfFiles.length; i+=20) {
+            File image = listOfFiles[i];
+            try {
+                Bitmap bmp = BitmapFactory.decodeFile(image.getAbsolutePath());
+                bmps.add(bmp);
+            } catch (Exception e) {
             }
         }
-        return frames;
+        return bmps;
     }
 }
 

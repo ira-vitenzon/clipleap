@@ -41,6 +41,14 @@ public class SelectCategoryWizardPage extends WizardPage {
     }
 
     @Override
-    public void setData(Bundle params){}
+    public void setData(Bundle params){
 
+    }
+
+    public Bundle getData(){
+        Bundle data = new Bundle();
+        data.putBoolean("isCity", _imvCityHighlight.getVisibility() == View.VISIBLE);
+        data.putStringArrayList("videos", null);
+        return data;
+    }
 }
