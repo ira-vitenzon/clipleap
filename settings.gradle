@@ -1,2 +1,7 @@
 include ':app'
 rootProject.name='clipleap'
+include ':OpenCV412'
+
+def opencvsdk = 'C:\\OpenCV-android-sdk'
+include ':opencv'
+project(':opencv').projectDir = new File(opencvsdk + '/sdk')

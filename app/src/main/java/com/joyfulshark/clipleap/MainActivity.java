@@ -2,7 +2,6 @@ package com.joyfulshark.clipleap;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
 import com.joyfulshark.clipleap.fragments.CreateClipWizardFragment;
 import com.joyfulshark.clipleap.fragments.SplashFragment;
 import com.joyfulshark.clipleap.fragments.SplashFragmentListener;
@@ -12,6 +11,7 @@ public class MainActivity extends AppCompatActivity implements SplashFragmentLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         showSplash();
     }
